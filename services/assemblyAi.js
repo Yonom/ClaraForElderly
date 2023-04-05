@@ -1,5 +1,3 @@
-// import RecordRTC from "recordrtc";
-
 const assemblyAi = async ({ onMessage }) => {
   const response = await fetch("/api/getToken");
   const data = await response.json();
@@ -39,7 +37,7 @@ const assemblyAi = async ({ onMessage }) => {
     socket.close();
   };
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, err) => {
     socket.onopen = () => {
       // once socket is open, begin recording
       navigator.mediaDevices
@@ -87,7 +85,7 @@ const assemblyAi = async ({ onMessage }) => {
             },
           });
         })
-        .catch((err) => console.error(err));
+        .catch(err);
     };
   });
 };

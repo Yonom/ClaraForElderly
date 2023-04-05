@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useRef, useState, useMemo } from "react";
+import React, { Suspense, useEffect, useState, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
   useGLTF,
@@ -13,25 +13,15 @@ import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
 
 import { LinearEncoding, sRGBEncoding } from "three/src/constants";
 import { LineBasicMaterial, MeshPhysicalMaterial, Vector2 } from "three";
-import ReactAudioPlayer from "react-audio-player";
 
 import createAnimation from "./converter";
 import blinkData from "./blendDataBlink.json";
 
 import * as THREE from "three";
 import axios from "axios";
-const _ = require("lodash");
 
-function Avatar({
-  avatar_url,
-  speak,
-  setSpeak,
-  lang,
-  text,
-  setAudioData,
-  playing,
-}) {
-  let gltf = useGLTF(avatar_url);
+function Avatar({ blendData }) {
+  const gltf = useGLTF("/model.glb");
   let morphTargetDictionaryBody = null;
   let morphTargetDictionaryLowerTeeth = null;
 
@@ -69,27 +59,24 @@ function Avatar({
     "/images/h_roughness.webp",
   ]);
 
-  _.each(
-    [
-      bodyTexture,
-      eyesTexture,
-      teethTexture,
-      teethNormalTexture,
-      bodySpecularTexture,
-      bodyRoughnessTexture,
-      bodyNormalTexture,
-      tshirtDiffuseTexture,
-      tshirtNormalTexture,
-      tshirtRoughnessTexture,
-      hairAlphaTexture,
-      hairNormalTexture,
-      hairRoughnessTexture,
-    ],
-    (t) => {
-      t.encoding = sRGBEncoding;
-      t.flipY = false;
-    }
-  );
+  [
+    bodyTexture,
+    eyesTexture,
+    teethTexture,
+    teethNormalTexture,
+    bodySpecularTexture,
+    bodyRoughnessTexture,
+    bodyNormalTexture,
+    tshirtDiffuseTexture,
+    tshirtNormalTexture,
+    tshirtRoughnessTexture,
+    hairAlphaTexture,
+    hairNormalTexture,
+    hairRoughnessTexture,
+  ].forEach((t) => {
+    t.encoding = sRGBEncoding;
+    t.flipY = false;
+  });
 
   bodyNormalTexture.encoding = LinearEncoding;
   tshirtNormalTexture.encoding = LinearEncoding;
@@ -185,62 +172,34 @@ function Avatar({
     }
   });
 
-  const [clips, setClips] = useState([]);
   const mixer = useMemo(() => new THREE.AnimationMixer(gltf.scene), []);
-
-  useEffect(() => {
-    if (speak === false) return;
-
-    makeSpeech(lang, text)
-      .then((response) => {
-        let { blendData, data } = response.data;
-        setAudioData(data);
-
-        if (blendData.length) {
-          let newClips = [
-            createAnimation(blendData, morphTargetDictionaryBody, "HG_Body"),
-            createAnimation(
-              blendData,
-              morphTargetDictionaryLowerTeeth,
-              "HG_TeethLower"
-            ),
-          ];
-
-          setClips(newClips);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        setSpeak(false);
-      });
-  }, [speak]);
 
   let idleFbx = useFBX("/idle.fbx");
   let { clips: idleClips } = useAnimations(idleFbx.animations);
 
-  idleClips[0].tracks = _.filter(idleClips[0].tracks, (track) => {
-    return (
-      track.name.includes("Head") ||
-      track.name.includes("Neck") ||
-      track.name.includes("Spine2")
-    );
-  });
+  idleClips[0].tracks = idleClips[0].tracks
+    .filter((track) => {
+      return (
+        track.name.includes("Head") ||
+        track.name.includes("Neck") ||
+        track.name.includes("Spine2")
+      );
+    })
+    .map((track) => {
+      if (track.name.includes("Head")) {
+        track.name = "head.quaternion";
+      }
 
-  idleClips[0].tracks = _.map(idleClips[0].tracks, (track) => {
-    if (track.name.includes("Head")) {
-      track.name = "head.quaternion";
-    }
+      if (track.name.includes("Neck")) {
+        track.name = "neck.quaternion";
+      }
 
-    if (track.name.includes("Neck")) {
-      track.name = "neck.quaternion";
-    }
+      if (track.name.includes("Spine")) {
+        track.name = "spine2.quaternion";
+      }
 
-    if (track.name.includes("Spine")) {
-      track.name = "spine2.quaternion";
-    }
-
-    return track;
-  });
+      return track;
+    });
 
   useEffect(() => {
     let idleClipAction = mixer.clipAction(idleClips[0]);
@@ -257,14 +216,24 @@ function Avatar({
 
   // Play animation clips when available
   useEffect(() => {
-    if (playing === false) return;
+    if (!blendData) return;
 
-    _.each(clips, (clip) => {
-      let clipAction = mixer.clipAction(clip);
+    const clips = [
+      createAnimation(blendData, morphTargetDictionaryBody, "HG_Body"),
+      createAnimation(
+        blendData,
+        morphTargetDictionaryLowerTeeth,
+        "HG_TeethLower"
+      ),
+    ];
+
+    clips.map((clip) => {
+      const clipAction = mixer.clipAction(clip);
       clipAction.setLoop(THREE.LoopOnce);
       clipAction.play();
+      console.log("playin clip", clip);
     });
-  }, [playing]);
+  }, [blendData]);
 
   useFrame((state, delta) => {
     mixer.update(delta);
@@ -295,49 +264,42 @@ function makeSpeech(lang, text) {
 let hasShownPlaybackError = false;
 
 function Scene({ lang, text, onEnded }) {
-  const audioPlayer = useRef();
-
-  const [speak, setSpeak] = useState(false);
-  const [playing, setPlaying] = useState(false);
-
-  // End of play
-  function playerEnded(e) {
-    setAudioData(null);
-    setSpeak(false);
-    setPlaying(false);
-    onEnded?.();
-  }
-
-  const setAudioData = async (audioData) => {
-    audioPlayer.current.audioEl.current.src = audioData;
-    if (audioData) {
-      try {
-        await audioPlayer.current.audioEl.current.play();
-      } catch (ex) {
-        playerEnded();
-        if (!hasShownPlaybackError) {
-          hasShownPlaybackError = true;
-          alert(
-            "There was a problem with audio playback. The avatar will not speak. There are known issues on iOS Safari. Please try on another browser or device."
-          );
-        }
-        throw ex;
-      }
-
-      setPlaying(true);
-    }
-  };
+  const [blendData, setBlendData] = useState(undefined);
 
   useEffect(() => {
-    if (text) {
-      setSpeak(true);
-    }
+    if (!text) return;
+
+    makeSpeech(lang, text)
+      .then(async (response) => {
+        let { blendData, data: audioData } = response.data;
+
+        if (blendData.length) {
+          setBlendData(blendData);
+        }
+
+        if (audioData) {
+          try {
+            const audio = new Audio(audioData);
+            audio.onended = onEnded;
+            await audio.play();
+          } catch (ex) {
+            if (!hasShownPlaybackError) {
+              hasShownPlaybackError = true;
+              alert(
+                "There was a problem with audio playback. The avatar will not speak. There are known issues on iOS Safari. Please try on another browser or device."
+              );
+            }
+            throw ex;
+          }
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }, [text]);
 
   return (
     <div className="full">
-      <ReactAudioPlayer ref={audioPlayer} onEnded={playerEnded} />
-
       <Canvas
         dpr={2}
         onCreated={(ctx) => {
@@ -358,15 +320,7 @@ function Scene({ lang, text, onEnded }) {
         </Suspense>
 
         <Suspense fallback={null}>
-          <Avatar
-            avatar_url="/model.glb"
-            speak={speak}
-            setSpeak={setSpeak}
-            lang={lang}
-            text={text}
-            setAudioData={setAudioData}
-            playing={playing}
-          />
+          <Avatar blendData={blendData} />
         </Suspense>
       </Canvas>
       <Loader dataInterpolation={(p) => `Loading... please wait`} />

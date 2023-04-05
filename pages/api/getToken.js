@@ -1,4 +1,4 @@
-const axios = require("axios");
+import axios from "axios";
 
 export default async function handler(req, res) {
   try {
@@ -15,6 +15,4 @@ export default async function handler(req, res) {
     } = error;
     res.status(status).json(data);
   }
-
-  // res.status(200).json({ name: "John Doe" });
 }

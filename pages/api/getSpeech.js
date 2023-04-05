@@ -56,8 +56,7 @@ const blendShapeNames = [
   "rightEyeRoll",
 ];
 
-const sdk = require("microsoft-cognitiveservices-speech-sdk");
-const _ = require("lodash");
+import * as sdk from "microsoft-cognitiveservices-speech-sdk";
 
 let SSML = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xml:lang="en-US">
 <voice name="__VOICE__">
@@ -102,9 +101,9 @@ const textToSpeech = async (lang, text) => {
       // `Animation` is an xml string for SVG or a json string for blend shapes
       var animation = JSON.parse(e.animation);
 
-      _.each(animation.BlendShapes, (blendArray) => {
+      animation.BlendShapes.forEach((blendArray) => {
         let blend = {};
-        _.each(blendShapeNames, (shapeName, i) => {
+        blendShapeNames.forEach((shapeName, i) => {
           blend[shapeName] = blendArray[i];
         });
 

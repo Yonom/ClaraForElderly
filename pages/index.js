@@ -1,18 +1,14 @@
 import voiceBot, { languages } from "@/services/voiceBot";
 import Head from "next/head";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useProgress } from "@react-three/drei";
 
 import Scene from "../components/Scene";
-import demoBot from "@/services/demoBot";
-import ReactAudioPlayer from "react-audio-player";
 
 export default function Home() {
   const [lang, setLang] = useState("en-US");
   const [subtitle, setSubtitle] = useState();
   const [userInput, setUserInput] = useState();
-  const dummyAudioPlayerRef = useRef();
-  const audioPlayerRef = useRef();
 
   const doneRef = useRef();
   const handleEnded = () => {
@@ -24,7 +20,7 @@ export default function Home() {
   const start = async (lng) => {
     // Safari requires audio api to be immediately accessed during an interaction
     // calling play unlocks audio api for the current session
-    await dummyAudioPlayerRef.current.audioEl.current.play();
+    // await new Audio("/audio/silence.mp3").play();
 
     setStarted(true);
     setLang(lng);
@@ -41,18 +37,10 @@ export default function Home() {
         setUserInput(msg);
       },
       onSpeak: async (msg) => {
-        const playToken = "(plays song)";
-        const playMusic = msg.includes(playToken);
-        msg = msg.replace(playToken, "").trim();
-
         if (msg === subtitle) return;
 
         setUserInput("");
         setSubtitle(msg);
-
-        if (playMusic) {
-          audioPlayerRef.current.audioEl.current.play();
-        }
 
         // wait until doneRef is called
         if (msg) {
@@ -73,16 +61,6 @@ export default function Home() {
       </Head>
       <main>
         <Scene lang={lang} text={subtitle} onEnded={handleEnded} />
-
-        <ReactAudioPlayer
-          src={"/audio/silence.mp3"}
-          ref={dummyAudioPlayerRef}
-        />
-        <ReactAudioPlayer
-          src={"/audio/music.mp3"}
-          ref={audioPlayerRef}
-          volume={0.3}
-        />
 
         {!!subtitle && (
           <div
