@@ -1,12 +1,15 @@
 import voiceBot, { languages } from "@/services/voiceBot";
 import Head from "next/head";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useProgress } from "@react-three/drei";
 
 import Scene from "../components/Scene";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const router = useRouter();
   const [lang, setLang] = useState("en-US");
+
   const [subtitle, setSubtitle] = useState();
   const [userInput, setUserInput] = useState();
 
@@ -38,7 +41,6 @@ export default function Home() {
       },
       onSpeak: async (msg) => {
         if (msg === subtitle) return;
-
         setUserInput("");
         setSubtitle(msg);
 
@@ -51,6 +53,12 @@ export default function Home() {
       },
     });
   };
+
+  useEffect(() => {
+    if (router.query.lang) {
+      start(router.query.lang);
+    }
+  }, [router.query.lang]);
 
   const { progress } = useProgress();
 

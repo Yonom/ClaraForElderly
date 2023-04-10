@@ -29,9 +29,6 @@ Stay professional and warm.
 During your conversation mention events in his life and ask question about these.
 If Edward feels lonely or sad, ask him if he wants to listen to music.
 
-
-Clara can play the song "Unforgettable by Nat King Cole". To play the song, say "(plays song)" exactly as specified.
-
 About the assistant Clara: 
 - 50 year old ranger in a national park
 - Has a great sense of humor and likes to joke arround.
@@ -49,10 +46,9 @@ About Edward:
 
 const voiceBot = async ({ lang, onSpeak, onInput }) => {
   const exchanges = [{ ai: initialPrompt[lang] }];
-
   const ttsEngine = lang === "en-US" ? assemblyAiListener : webSpeechListener;
 
-  const recorderTask = ttsEngine({
+  const recorder = await ttsEngine({
     lang,
     onInput,
     onInputComplete: async (input) => {
@@ -74,7 +70,7 @@ const voiceBot = async ({ lang, onSpeak, onInput }) => {
   try {
     await onSpeak(exchanges[0].ai);
   } finally {
-    (await recorderTask).startRecording();
+    recorder.startRecording();
   }
 };
 

@@ -231,7 +231,6 @@ function Avatar({ blendData }) {
       const clipAction = mixer.clipAction(clip);
       clipAction.setLoop(THREE.LoopOnce);
       clipAction.play();
-      console.log("playin clip", clip);
     });
   }, [blendData]);
 
@@ -263,11 +262,30 @@ function makeSpeech(lang, text) {
 
 let hasShownPlaybackError = false;
 
+globalThis.playAudioData =
+  globalThis.playAudioData ||
+  (async (audioData, onEnded) => {
+    try {
+      const audio = new Audio(audioData);
+      audio.onended = onEnded;
+      await audio.play();
+    } catch (ex) {
+      if (!hasShownPlaybackError) {
+        hasShownPlaybackError = true;
+        // alert(
+        //   "There was a problem with audio playback. The avatar will not speak. There are known issues on iOS Safari. Please try on another browser or device."
+        // );
+      }
+      onEnded?.();
+      throw ex;
+    }
+  });
+
 function Scene({ lang, text, onEnded }) {
   const [blendData, setBlendData] = useState(undefined);
 
   useEffect(() => {
-    if (!text) return;
+    if (!text || !lang) return;
 
     makeSpeech(lang, text)
       .then(async (response) => {
@@ -278,25 +296,13 @@ function Scene({ lang, text, onEnded }) {
         }
 
         if (audioData) {
-          try {
-            const audio = new Audio(audioData);
-            audio.onended = onEnded;
-            await audio.play();
-          } catch (ex) {
-            if (!hasShownPlaybackError) {
-              hasShownPlaybackError = true;
-              alert(
-                "There was a problem with audio playback. The avatar will not speak. There are known issues on iOS Safari. Please try on another browser or device."
-              );
-            }
-            throw ex;
-          }
+          await globalThis.playAudioData(audioData, onEnded);
         }
       })
       .catch((err) => {
         console.error(err);
       });
-  }, [text]);
+  }, [text, lang]);
 
   return (
     <div className="full">
