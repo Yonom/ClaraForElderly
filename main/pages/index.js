@@ -5,37 +5,25 @@ import { useProgress } from "@react-three/drei";
 
 import Scene from "../components/Scene";
 import { useRouter } from "next/router";
+import playAudioData from "../services/playAudioData";
+import { makeSpeech } from "../services/makeSpeech";
 
 export default function Home() {
-  const router = useRouter();
-  const [lang, setLang] = useState("en-US");
-
-  const [subtitle, setSubtitle] = useState();
-  const [userInput, setUserInput] = useState();
-
-  const doneRef = useRef();
-  const handleEnded = () => {
-    doneRef.current?.();
-    doneRef.current = undefined;
-  };
+  const [subtitle, setSubtitle] = useState("");
+  const [userInput, setUserInput] = useState("");
+  const [blendData, setBlendData] = useState();
 
   const [started, setStarted] = useState(false);
-  const start = async (lng) => {
+  const start = async (lang) => {
     // Safari requires audio api to be immediately accessed during an interaction
     // calling play unlocks audio api for the current session
-    // await new Audio("/audio/silence.mp3").play();
+    new Audio(
+      "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA"
+    ).play();
 
     setStarted(true);
-    setLang(lng);
-
-    const userAgent = window.navigator.userAgent;
-    if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i)) {
-      // this interaction is required to enable audio on mobile safari
-      alert("Note: Support on Mobile Safari is experimental.");
-    }
-
     voiceBot({
-      lang: lng,
+      lang,
       onInput: (msg) => {
         setUserInput(msg);
       },
@@ -44,16 +32,27 @@ export default function Home() {
         setUserInput("");
         setSubtitle(msg);
 
-        // wait until doneRef is called
         if (msg) {
-          await new Promise((r) => {
-            doneRef.current = r;
+          await new Promise(async (resolve) => {
+            const response = await makeSpeech(lang, msg);
+            const { blendData, audioData } = response.data;
+
+            if (blendData.length) {
+              setBlendData(blendData);
+            }
+
+            if (audioData) {
+              await playAudioData(audioData, resolve);
+            } else {
+              resolve();
+            }
           });
         }
       },
     });
   };
 
+  const router = useRouter();
   useEffect(() => {
     if (router.query.lang) {
       start(router.query.lang);
@@ -68,7 +67,7 @@ export default function Home() {
         <title>New Bets</title>
       </Head>
       <main>
-        <Scene lang={lang} text={subtitle} onEnded={handleEnded} />
+        <Scene blendData={blendData} />
 
         {!!subtitle && (
           <div

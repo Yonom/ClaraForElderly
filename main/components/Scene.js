@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState, useMemo } from "react";
+import React, { Suspense, useEffect, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
   useGLTF,
@@ -18,7 +18,6 @@ import createAnimation from "./converter";
 import blinkData from "./blendDataBlink.json";
 
 import * as THREE from "three";
-import axios from "axios";
 
 function Avatar({ blendData }) {
   const gltf = useGLTF("/model.glb");
@@ -256,54 +255,7 @@ function Bg() {
   );
 }
 
-function makeSpeech(lang, text) {
-  return axios.post("/api/getSpeech", { lang, text });
-}
-
-let hasShownPlaybackError = false;
-
-globalThis.playAudioData =
-  globalThis.playAudioData ||
-  (async (audioData, onEnded) => {
-    try {
-      const audio = new Audio(audioData);
-      audio.onended = onEnded;
-      await audio.play();
-    } catch (ex) {
-      if (!hasShownPlaybackError) {
-        hasShownPlaybackError = true;
-        // alert(
-        //   "There was a problem with audio playback. The avatar will not speak. There are known issues on iOS Safari. Please try on another browser or device."
-        // );
-      }
-      onEnded?.();
-      throw ex;
-    }
-  });
-
-function Scene({ lang, text, onEnded }) {
-  const [blendData, setBlendData] = useState(undefined);
-
-  useEffect(() => {
-    if (!text || !lang) return;
-
-    makeSpeech(lang, text)
-      .then(async (response) => {
-        let { blendData, data: audioData } = response.data;
-
-        if (blendData.length) {
-          setBlendData(blendData);
-        }
-
-        if (audioData) {
-          await globalThis.playAudioData(audioData, onEnded);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [text, lang]);
-
+function Scene({ blendData }) {
   return (
     <div className="full">
       <Canvas

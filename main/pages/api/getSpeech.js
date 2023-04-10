@@ -125,7 +125,10 @@ const textToSpeech = async (lang, text) => {
         outputStream.close();
         synthesizer.close();
 
-        resolve({ blendData, data: "data:audio/mp3;base64," + base64data });
+        resolve({
+          blendData,
+          audioData: "data:audio/mp3;base64," + base64data,
+        });
       },
       (error) => {
         synthesizer.close();
