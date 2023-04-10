@@ -1,9 +1,10 @@
+const SpeechRecognition =
+  globalThis.SpeechRecognition || globalThis.webkitSpeechRecognition;
+
 const webSpeech = ({ lang, onMessage }) => {
   return {
     startRecording: () => {
       return new Promise(() => {
-        const SpeechRecognition =
-          window.SpeechRecognition || webkitSpeechRecognition;
         const recognition = new SpeechRecognition();
 
         recognition.lang = lang;
@@ -43,5 +44,7 @@ export const webSpeechListener = async ({ lang, onInput, onInputComplete }) => {
   });
   return recorder;
 };
+
+export const canUseWebSpeech = !!SpeechRecognition;
 
 export default webSpeech;

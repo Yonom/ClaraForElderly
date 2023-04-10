@@ -1,14 +1,16 @@
 import { gptCompletion } from "./openAi";
 import { assemblyAiListener } from "./assemblyAi";
-import { webSpeechListener } from "./webSpeech";
+import { canUseWebSpeech, webSpeechListener } from "./webSpeech";
 
-export const languages = {
-  "en-US": "English",
-  "de-DE": "German",
-  "fr-FR": "French",
-  "es-ES": "Spanish",
-  "zh-CN": "Mandarin",
-};
+export const languages = canUseWebSpeech
+  ? {
+      "en-US": "English",
+      "de-DE": "German",
+      "fr-FR": "French",
+      "es-ES": "Spanish",
+      "zh-CN": "Mandarin",
+    }
+  : { "en-US": "English" };
 
 const initialPrompt = {
   "en-US": "Hello Edward, how are we feeling today?",
