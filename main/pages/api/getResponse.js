@@ -13,7 +13,7 @@ const handler = async (req) => {
       Accept: "text/event-stream",
     },
     body: JSON.stringify({
-      model: "text-curie-001",
+      model: "text-davinci-003",
       prompt,
       temperature: 0.7,
       max_tokens: 1024,
