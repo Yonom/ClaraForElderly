@@ -1,6 +1,6 @@
 import voiceBot, { languages } from "@/services/voiceBot";
 import Head from "next/head";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useProgress } from "@react-three/drei";
 
 import Scene from "../components/Scene";
@@ -14,6 +14,8 @@ export default function Home() {
   const [blendData, setBlendData] = useState();
 
   const [started, setStarted] = useState(false);
+  const router = useRouter();
+
   const start = async (lang) => {
     // Safari requires audio api to be immediately accessed during an interaction
     // calling play unlocks audio api for the current session
@@ -23,6 +25,8 @@ export default function Home() {
 
     setStarted(true);
     voiceBot({
+      messageOverride: router.query.message,
+      promptOverride: router.query.prompt,
       lang,
       onInput: (msg) => {
         setUserInput(msg);
@@ -52,7 +56,6 @@ export default function Home() {
     });
   };
 
-  const router = useRouter();
   useEffect(() => {
     if (router.query.lang) {
       start(router.query.lang);
