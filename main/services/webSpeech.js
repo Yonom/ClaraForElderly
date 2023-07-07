@@ -27,7 +27,7 @@ const webSpeech = ({ lang, onMessage }) => {
   };
 };
 
-export const webSpeechListener = async ({ lang, onInput, onInputComplete }) => {
+export const webSpeechListener = ({ lang, onInput, onInputComplete }) => {
   const recorder = webSpeech({
     lang,
     onMessage: async (message, hasUnfinalizedChanges) => {

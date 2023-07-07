@@ -10,7 +10,7 @@ export default function App() {
   return (
     <PlayAudioWebView
       style={{ flex: 1 }}
-      source={{ uri: "https://new-bets.vercel.app/?lang=" + lang }}
+      source={{ uri: "https://clara-for-elderly.vercel.app/?lang=" + lang }}
     />
   );
 }

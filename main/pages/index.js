@@ -17,14 +17,9 @@ export default function Home() {
   const router = useRouter();
 
   const start = async (lang) => {
-    // Safari requires audio api to be immediately accessed during an interaction
-    // calling play unlocks audio api for the current session
-    new Audio(
-      "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA"
-    ).play();
-
     setStarted(true);
-    voiceBot({
+
+    const recorder = voiceBot({
       messageOverride: router.query.message,
       promptOverride: router.query.prompt,
       lang,
@@ -54,6 +49,7 @@ export default function Home() {
         }
       },
     });
+    recorder.startRecording();
   };
 
   useEffect(() => {
@@ -132,9 +128,20 @@ export default function Home() {
               ))}
             </div>
             <p style={{ fontSize: 16, marginTop: 5 }}>
-              Avatar animations are only supported for English and Mandarin.{" "}
+              Avatar animations are only supported for English and Mandarin.
               <br />
               To get the full experience, please use one of these languages.
+              <br />
+              <br />
+              Non-commercial use only.
+              <br />
+              Your data is sent to AssemblyAI and OpenAI in accordance to their
+              privacy policies.
+              <br />
+              Hosted by{" "}
+              <a href="https://github.com/Yonom" style={{ color: "white" }}>
+                Simon Farshid
+              </a>
             </p>
           </div>
         )}

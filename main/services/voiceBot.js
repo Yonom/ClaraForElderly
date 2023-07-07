@@ -25,7 +25,7 @@ export const getServicePrompt = (
 ) => `You are an assistant named Clara who is talking with Edward. 
 
 Try to lift Edwards mood by having a conversation with him.
-Answer in max 3 sentences and only in ${lang}.
+Keep your answers very brief and lightweight and only in ${lang}.
 Stay professional and warm.
 
 During your conversation mention events in his life and ask question about these.
@@ -44,7 +44,7 @@ About Edward:
 - In retirement, he enjoyed hobbies like reading, chess, gardening, and walks in the park, where he exchanged stories with other retirees
 - Despite being in his twilight years, Edward remained active and engaged, always eager to make new memories`;
 
-const voiceBot = async ({
+const voiceBot = ({
   messageOverride,
   promptOverride,
   lang,
@@ -57,7 +57,7 @@ const voiceBot = async ({
   ];
   const ttsEngine = lang === "en-US" ? assemblyAiListener : webSpeechListener;
 
-  const recorder = await ttsEngine({
+  const recorder = ttsEngine({
     lang,
     onInput,
     onInputComplete: async (input) => {
@@ -70,11 +70,17 @@ const voiceBot = async ({
       await onSpeak(text);
     },
   });
-  try {
-    await onSpeak(messages[1].content);
-  } finally {
-    recorder.startRecording();
-  }
+  recorder.startRecording();
+
+  return {
+    startRecording: async () => {
+      try {
+        await onSpeak(messages[1].content);
+      } finally {
+        recorder.resumeRecording();
+      }
+    },
+  };
 };
 
 export default voiceBot;

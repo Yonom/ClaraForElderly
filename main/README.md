@@ -1,9 +1,9 @@
-New Bets
+Clara for Elderly
 ----
 
 We help the elderly feel less lonely by providing a virtual companion called Clara who listens, empathizes with them, and engages in conversation.
 
-- [Hosted Demo](https://new-bets.vercel.app/)
+- [Hosted Demo](https://clara-for-elderly.vercel.app/)
 - [Presentation Loom](https://www.loom.com/share/116587b5bd4d47688a38be7d5e6148ef)
 - [Presentation PowerPoint](https://github.com/Yonom/new-bets/blob/main/Antler_NewBets.pptx)
 - [Presentation PDF](https://github.com/Yonom/new-bets/blob/main/Antler_NewBets.pdf)
