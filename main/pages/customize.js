@@ -5,7 +5,7 @@ import { useState } from "react";
 
 export default function Customize() {
   const [message, setMessage] = useState(
-    "Hello my name is Lee, how are we feeling today?"
+    "Hello my Name is Lee, how are we feeling today?"
   );
   const [prompt, setPrompt] = useState(getServicePrompt("English"));
 
