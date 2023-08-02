@@ -143,7 +143,7 @@ export default function Home() {
                 Elias Schwalme
               and Discord Server at{" "}
               <a href="https://discord.gg/2MD7akWv" style={{ color: "white" }}>
-                Lee-AI -> Discord
+                Lee-AI
               <br />
               </a>
             </p>
