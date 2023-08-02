@@ -137,6 +137,11 @@ export default function Home() {
               <br />
               Your data is sent to AssemblyAI and OpenAI in accordance to their
               privacy policies.
+              <br />
+              Hosted by{" "}
+              <a href="https://www.linkedin.com/in/elias-schwalme-723b04205/" style={{ color: "white" }}>
+                Elias Schwalme
+              </a>
             </p>
           </div>
         )}
