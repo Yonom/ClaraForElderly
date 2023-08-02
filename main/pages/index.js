@@ -141,11 +141,6 @@ export default function Home() {
               Hosted by{" "}
               <a href="https://www.linkedin.com/in/elias-schwalme-723b04205/" style={{ color: "white" }}>
                 Elias Schwalme
-              <br />
-              and on Discord Server{" "}
-              <a href="https://discord.gg/2MD7akWv" style={{ color: "white" }}>
-                Lee-AI
-              <br />
               </a>
             </p>
           </div>
