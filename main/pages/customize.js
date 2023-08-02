@@ -5,7 +5,7 @@ import { useState } from "react";
 
 export default function Customize() {
   const [message, setMessage] = useState(
-    "Hello Edward, how are we feeling today?"
+    "Hello my name is Lee and I am a chatbot avatar powered by Open AI, how are we feeling today?"
   );
   const [prompt, setPrompt] = useState(getServicePrompt("English"));
 
