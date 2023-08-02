@@ -137,11 +137,6 @@ export default function Home() {
               <br />
               Your data is sent to AssemblyAI and OpenAI in accordance to their
               privacy policies.
-              <br />
-              Hosted by{" "}
-              <a href="https://github.com/Yonom" style={{ color: "white" }}>
-                Simon Farshid
-              </a>
             </p>
           </div>
         )}
