@@ -59,7 +59,3 @@ export default function Customize() {
     </>
   );
 }
-      </main>
-    </>
-  );
-}
