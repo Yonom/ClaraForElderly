@@ -139,9 +139,9 @@ export default function Home() {
               privacy policies.
               <br />
               <br />
-              Stay tuned on Discord{" "}
+              Stay tuned on{" "}
               <a href="https://discord.gg/2MD7akWv" style={{ color: "white" }}>
-                Lee-AI
+                Discord - Lee-AI
               </a>
             </p>
           </div>
