@@ -138,9 +138,9 @@ export default function Home() {
               Your data is sent to AssemblyAI and OpenAI in accordance to their
               privacy policies.
               <br />
-              Hosted by{" "}
-              <a href="https://www.linkedin.com/in/elias-schwalme-723b04205/" style={{ color: "white" }}>
-                Elias Schwalme
+              stay tuned on discord{" "}
+              <a href="https://discord.gg/2MD7akWv" style={{ color: "white" }}>
+                Lee-AI
               </a>
             </p>
           </div>
