@@ -13,7 +13,7 @@ export const languages = canUseWebSpeech
   : { "en-US": "English" };
 
 const initialPrompt = {
-  "en-US": "Hi, I'm Lee, a chatbot avatar created based on artificial intelligence that perfectly responds to your personal needs! Is there anything I can do?",
+  "en-US": "Hi, I'm Lee, a chatbot avatar created based on AI that responds to your personal needs! Is there anything I can do?",
   "de-DE": "Hi, ich bin Lee, ein Chatbot-Avatar, der auf der Grundlage künstlicher Intelligenz erstellt wurde und auf deine persönlichen Bedürfnisse perfekt eingeht! Gibt es etwas, was ich für dich tun kann?",
   "fr-FR": "Bonjour, je suis Lee, un chatbot avatar créé sur la base de l'intelligence artificielle qui répond parfaitement à vos besoins personnels ! Y a-t-il quelque chose que je puisse faire?",
   "es-ES": "Hola, soy Lee, un avatar chatbot creado a base de inteligencia artificial que responde perfectamente a tus necesidades personales. ¿Hay algo que pueda hacer?",
