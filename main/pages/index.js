@@ -141,7 +141,7 @@ export default function Home() {
               <br />
               Stay tuned on{" "}
               <a href="https://discord.gg/2MD7akWv" style={{ color: "white" }}>
-                Discord - Lee-AI
+                Discord: Lee-AI
               </a>
             </p>
           </div>
