@@ -13,7 +13,7 @@ export const languages = canUseWebSpeech
   : { "en-US": "English" };
 
 const initialPrompt = {
-  "en-US": "Hello Edward, how are we feeling today?",
+  "en-US": "Hello my name is Lee, how are we feeling today?",
   "de-DE": "Ja guten tag auch lieber Edward. Wie geht es dir heute?",
   "fr-FR": "Bonjour Edward, comment nous sentons-nous aujourd'hui ?",
   "es-ES": "Hola Edward, ¿cómo nos sentimos hoy?",
