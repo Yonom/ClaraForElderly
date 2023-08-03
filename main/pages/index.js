@@ -138,7 +138,8 @@ export default function Home() {
               Your data is sent to AssemblyAI and OpenAI in accordance to their
               privacy policies.
               <br />
-              stay tuned on discord{" "}
+              <br />
+              Stay tuned on Discord{" "}
               <a href="https://discord.gg/2MD7akWv" style={{ color: "white" }}>
                 Lee-AI
               </a>
