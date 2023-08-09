@@ -71,7 +71,7 @@ export default function Home() {
         {!!subtitle && (
           <div
             style={{
-              position: "absolute center",
+              position: "absolute",
               bottom: 20,
               left: 20,
               right: 20,
@@ -88,7 +88,7 @@ export default function Home() {
         {!started && progress === 100 && (
           <div
             style={{
-              position: "absolute center",
+              position: "absolute",
               top: 0,
               bottom: 0,
               left: 0,
