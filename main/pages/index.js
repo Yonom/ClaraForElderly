@@ -135,8 +135,7 @@ export default function Home() {
               <br />
               Non-commercial use only.
               <br />
-              Your data is sent to AssemblyAI and OpenAI in accordance to their
-              privacy policies.
+              Information on data protection is given at "lee-ai.com".
               <br />
               <br />
               hosted by{" "}
