@@ -33,7 +33,7 @@ export default function Customize() {
       <Head>
         <title>New Bets Customizer</title>
       </Head>
-      <main style={{ margin: 32 }}>
+      <main style={{ margin: 37 }}>
         <h2>Prompt customizer</h2>
 
         <h3>Initial Message</h3>
