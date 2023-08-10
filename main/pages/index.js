@@ -135,7 +135,8 @@ export default function Home() {
               <br />
               Non-commercial use only.
               <br />
-              Information on data protection is given at "lee-ai.com".
+              <br />
+              Information on data protection is given at lee-ai.com.
               <br />
               <br />
               hosted by{" "}
