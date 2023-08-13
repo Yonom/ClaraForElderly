@@ -4,25 +4,29 @@ const SpeechRecognition =
 const webSpeech = ({ lang, onMessage }) => {
   return {
     startRecording: () => {
-      return new Promise(() => {
-        const recognition = new SpeechRecognition();
+      // dummy
+      const recognition = new SpeechRecognition();
+      recognition.start();
+      recognition.stop();
+    },
+    resumeRecording: () => {
+      const recognition = new SpeechRecognition();
 
-        recognition.lang = lang;
-        recognition.continuous = false;
-        recognition.interimResults = true;
+      recognition.lang = lang;
+      recognition.continuous = false;
+      recognition.interimResults = true;
 
-        recognition.onresult = (event) => {
-          const result = event.results[0];
-          const hasUnfinalizedChanges = !result.isFinal;
-          const transcript = result[0].transcript;
-          onMessage(transcript, hasUnfinalizedChanges);
-        };
-        recognition.onspeechend = () => {
-          recognition.stop();
-        };
+      recognition.onresult = (event) => {
+        const result = event.results[0];
+        const hasUnfinalizedChanges = !result.isFinal;
+        const transcript = result[0].transcript;
+        onMessage(transcript, hasUnfinalizedChanges);
+      };
+      recognition.onspeechend = () => {
+        recognition.stop();
+      };
 
-        recognition.start();
-      });
+      recognition.start();
     },
   };
 };
@@ -37,7 +41,7 @@ export const webSpeechListener = ({ lang, onInput, onInputComplete }) => {
         try {
           await onInputComplete(message);
         } finally {
-          recorder.startRecording();
+          recorder.resumeRecording();
         }
       }
     },

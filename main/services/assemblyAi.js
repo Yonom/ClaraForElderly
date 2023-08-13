@@ -45,7 +45,6 @@ const assemblyAi = ({ onMessage }) => {
   let started = false;
   let paused = true;
   return {
-    getIsPaused: () => paused,
     startRecording: async () => {
       if (started) {
         return;
