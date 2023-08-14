@@ -49,6 +49,8 @@ export const webSpeechListener = ({ lang, onInput, onInputComplete }) => {
   return recorder;
 };
 
-export const canUseWebSpeech = !!SpeechRecognition;
+
+const isSafariStandalone = ("standalone" in window.navigator) && window.navigator.standalone;
+export const canUseWebSpeech = !!SpeechRecognition && !isSafariStandalone;
 
 export default webSpeech;
